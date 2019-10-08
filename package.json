@@ -1,0 +1,21 @@
+{
+  "name": "node_pkg_example",
+  "author": "extracold",
+  "version": "1.0.0",
+  "main": "src/buildStarter.js",
+  "scripts": {
+    "start": "node .",
+    "raw": "node ./src/rawStarter.js",
+    "build:mac": "npx pkg -t node10-macos-x64 --output server.exe src/pkg/app.js",
+    "build:win": "npx pkg -t node10-win-x64 --output server.exe src/pkg/app.js"
+  },
+  "devDependencies": {
+    "pkg": "^4.4.0",
+    "socket.io": "^2.3.0",
+    "socket.io-client": "^2.3.0"
+  },
+  "pkg": {
+    "scripts": "pkg/*.js",
+    "assets": "assets/**/*"
+  }
+}
