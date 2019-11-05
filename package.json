@@ -7,7 +7,7 @@
     "start": "node .",
     "raw": "node ./src/rawStarter.js",
     "build:mac": "npx pkg -t node10-macos-x64 --output server.exe src/pkg/app.js",
-    "build:win": "npx pkg -t node10-win-x64 --output server.exe src/pkg/app.js"
+    "build:win": "npx pkg -t node10-win-x86 --output server.exe src/pkg/app.js"
   },
   "devDependencies": {
     "pkg": "^4.4.0",
