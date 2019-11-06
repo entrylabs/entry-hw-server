@@ -216,7 +216,11 @@ class EntryServer extends EventEmitter {
                 this.socketServer = undefined;
                 this._setRunningMode(RunningModeTypes.client);
                 this._setCloudServerMode(CloudModeTypes.cloud);
-                this.socketClient = this._createSocketClient('https://hardware.playentry.org:23518');
+                this.socketClient = this._createSocketClient(
+                    this.options.http ?
+                        'http://127.0.0.1' :
+                        'https://hardware.playentry.org:23518'
+                );
             });
 
             server.on('listening', () => {
