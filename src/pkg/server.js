@@ -193,6 +193,9 @@ class EntryServer extends EventEmitter {
         printLog('init server..');
         try {
             const SSLFileList = this.options.http ? undefined : this._getSSLFileList();
+            const host = this.options.http ?
+                `http://127.0.0.1:${port}` :
+                `https://hardware.playentry.org:${port}`;
             let server = undefined;
             if (SSLFileList) {
                 printLog('server runs on https');
@@ -216,11 +219,7 @@ class EntryServer extends EventEmitter {
                 this.socketServer = undefined;
                 this._setRunningMode(RunningModeTypes.client);
                 this._setCloudServerMode(CloudModeTypes.cloud);
-                this.socketClient = this._createSocketClient(
-                    this.options.http ?
-                        'http://127.0.0.1' :
-                        'https://hardware.playentry.org:23518'
-                );
+                this.socketClient = this._createSocketClient(host);
             });
 
             server.on('listening', () => {
