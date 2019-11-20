@@ -9,9 +9,8 @@ const path = require('path');
  */
 const assetList = {
     ['hardware.key']: path.join(__dirname, '../../assets/hardware.key'),
-    ['ChainCA1.crt']: path.join(__dirname, '../../assets/ChainCA1.crt'),
-    ['ChainCA2.crt']: path.join(__dirname, '../../assets/ChainCA2.crt'),
     ['cert.pem']: path.join(__dirname, '../../assets/cert.pem'),
+    ['ChainCA1.crt']: path.join(__dirname, '../../assets/ChainCA1.crt'),
     ['RootCA.crt']: path.join(__dirname, '../../assets/RootCA.crt'),
 };
 

@@ -170,7 +170,6 @@ class EntryServer extends EventEmitter {
             assetStore.get('hardware.key'),
             assetStore.get('cert.pem'),
             assetStore.get('ChainCA1.crt'),
-            assetStore.get('ChainCA2.crt'),
             assetStore.get('RootCA.crt'),
         ];
         const existsSync = (fileName) => {
@@ -195,19 +194,11 @@ class EntryServer extends EventEmitter {
             const SSLFileList = this.options.http ? undefined : this._getSSLFileList();
             const host = this.options.http ?
                 `http://127.0.0.1:${port}` :
-                `https://hardware.playentry.org:${port}`;
+                `https://hw.playentry.org:${port}`;
             let server = undefined;
             if (SSLFileList) {
                 printLog('server runs on https');
-                server = https.createServer({
-                    key: fs.readFileSync(assetStore.get('hardware.key')),
-                    cert: fs.readFileSync(assetStore.get('cert.pem')),
-                    ca: [
-                        fs.readFileSync(assetStore.get('ChainCA1.crt')),
-                        fs.readFileSync(assetStore.get('ChainCA2.crt')),
-                        fs.readFileSync(assetStore.get('RootCA.crt')),
-                    ],
-                }, this._httpHealthCheckListener.bind(this));
+                server = https.createServer(SSLFileList, this._httpHealthCheckListener.bind(this));
             } else {
                 printLog('server runs on http');
                 server = http.createServer(this._httpHealthCheckListener.bind(this));
