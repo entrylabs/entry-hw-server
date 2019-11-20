@@ -1,7 +1,7 @@
 {
-  "name": "node_pkg_example",
-  "author": "extracold",
-  "version": "1.0.0",
+  "name": "entry-hw-server",
+  "author": "extracold1209",
+  "version": "2.0.0",
   "main": "src/buildStarter.js",
   "scripts": {
     "start": "node .",
