@@ -110,7 +110,6 @@ class EntryServer extends EventEmitter {
         this.httpServer.close();
         this.socketServer = undefined;
         this.httpServer = undefined;
-        this.emit('close');
     }
 
     _httpHealthCheckListener(req, res) {
@@ -336,6 +335,7 @@ class EntryServer extends EventEmitter {
             });
 
             connection.on('close', () => {
+                this.emit('close');
                 if (connection.handshake.query.childServer === 'true') {
                     // 해당 클라이언트가 하드웨어에서 온 메세지인 경우
                     this._removeHardwareClient(connection);
