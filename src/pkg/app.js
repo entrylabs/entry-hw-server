@@ -12,7 +12,8 @@ process.on('SIGTERM', () => {
 
 setInterval(() => {
     if (!process.connected || process.channel === null) {
+        entryServer.close();
         process.exit();
     }
-}, 3000);
+}, 2000);
 
