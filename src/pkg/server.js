@@ -251,6 +251,7 @@ class EntryServer extends EventEmitter {
 
         socketServer.on('connection', (socket) => {
             printLog('socket connected');
+            this.emit('connection');
 
             const connection = socket;
 
