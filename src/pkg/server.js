@@ -105,7 +105,6 @@ class EntryServer extends EventEmitter {
     }
 
     close() {
-        printLog('server will be close..');
         this.socketServer && this.socketServer.close();
         this.httpServer && this.httpServer.listening &&
         this.httpServer.close();

@@ -22,6 +22,9 @@ const registerFunction = (entryServer) => {
     entryServer.on('close', () => {
         sendEventUsingProcess('close');
     });
+    entryServer.on('connection', () => {
+        sendEventUsingProcess('connection');
+    });
 };
 
 module.exports = {
