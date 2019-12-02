@@ -370,9 +370,10 @@ class EntryServer extends EventEmitter {
 
     _createSocketClient(address) {
         printLog('init socket client...');
-        const socket = SocketIOClient(address, {
+        const socket = SocketIOClient.connect(address, {
             query: { childServer: true },
             reconnectionAttempts: 3,
+            rejectUnauthorized: false, // TODO 인증서 문제로 추가한 프로퍼티. 인증서가 정상인증되지 않음. ca 문제일수 있음
         });
 
         socket.on('connect', () => {
