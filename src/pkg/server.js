@@ -1,6 +1,8 @@
 const assetStore = require('./assetPathStore');
 const { RUNNING_MODE_TYPES: RunningModeTypes, CLOUD_MODE_TYPES: CloudModeTypes } = require('./constants');
 const fs = require('fs');
+const path = require('path');
+const downloadEntryModuleFileHandler = require('./downloadEntryModuleFileHandler');
 const EventEmitter = require('events');
 const https = require('https');
 const http = require('http');
@@ -113,9 +115,14 @@ class EntryServer extends EventEmitter {
     }
 
     _httpHealthCheckListener(req, res) {
-        printLog('http request received:', req.path);
-        res.statusCode = 200;
-        res.end('hello entry');
+        if (req.url.startsWith('/modules')) {
+            // app/server/[OS_type]/server.exe
+            downloadEntryModuleFileHandler(req, res);
+        } else {
+            printLog('http request received:', req.path);
+            res.statusCode = 200;
+            res.end('hello entry');
+        }
     };
 
     /**
@@ -195,10 +202,10 @@ class EntryServer extends EventEmitter {
                 `https://hw.playentry.org:${port}`;
             let server = undefined;
             if (SSLFileList) {
-                printLog('server runs on https');
+                printLog('server runs on https', host);
                 server = https.createServer(SSLFileList, this._httpHealthCheckListener.bind(this));
             } else {
-                printLog('server runs on http');
+                printLog('server runs on http', host);
                 server = http.createServer(this._httpHealthCheckListener.bind(this));
             }
 
