@@ -1,8 +1,7 @@
 const assetStore = require('./assetPathStore');
 const { RUNNING_MODE_TYPES: RunningModeTypes, CLOUD_MODE_TYPES: CloudModeTypes } = require('./constants');
 const fs = require('fs');
-const path = require('path');
-const downloadEntryModuleFileHandler = require('./downloadEntryModuleFileHandler');
+const httpRequestHandler = require('./http/httpRequestHandler');
 const EventEmitter = require('events');
 const https = require('https');
 const http = require('http');
@@ -114,17 +113,6 @@ class EntryServer extends EventEmitter {
         this.httpServer = undefined;
     }
 
-    _httpHealthCheckListener(req, res) {
-        if (req.url.startsWith('/modules')) {
-            // app/server/[OS_type]/server.exe
-            downloadEntryModuleFileHandler(req, res);
-        } else {
-            printLog('http request received:', req.path);
-            res.statusCode = 200;
-            res.end('hello entry');
-        }
-    };
-
     /**
      * 현재 객체가 서버로 동작하는지, 클라이언트로 동작하는지를 표기한다.
      * @param mode
@@ -203,10 +191,10 @@ class EntryServer extends EventEmitter {
             let server = undefined;
             if (SSLFileList) {
                 printLog('server runs on https', host);
-                server = https.createServer(SSLFileList, this._httpHealthCheckListener.bind(this));
+                server = https.createServer(SSLFileList, httpRequestHandler);
             } else {
                 printLog('server runs on http', host);
-                server = http.createServer(this._httpHealthCheckListener.bind(this));
+                server = http.createServer(httpRequestHandler);
             }
 
             server.on('error', () => {
