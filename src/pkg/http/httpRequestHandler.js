@@ -1,5 +1,7 @@
 const downloadEntryModuleFileHandler = require('./downloadEntryModuleFileHandler');
 
+const printLog = console.log;
+
 module.exports = (req, res) => {
     if (req.url.startsWith('/modules')) {
         // app/server/[OS_type]/server.exe
