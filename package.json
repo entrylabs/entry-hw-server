@@ -6,7 +6,7 @@
   "scripts": {
     "start": "node ./src/buildStarter.js",
     "raw": "node ./src/rawStarter.js",
-    "build:mac": "npx pkg -t node10-macos-x64 --output server.exe src/pkg/app.js",
+    "build:mac": "npx pkg -t node10-macos-x64 --output server.txt src/pkg/app.js",
     "build:win": "npx pkg -t node10-win-x86 --output server.exe src/pkg/app.js"
   },
   "devDependencies": {

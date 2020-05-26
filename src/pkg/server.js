@@ -219,7 +219,7 @@ class EntryServer extends EventEmitter {
                 this._initSocketServer();
             });
 
-            server.listen(port, () => {
+            server.listen(port, '127.0.0.1', () => {
                 printLog('https server created');
             });
         } catch (e) {
