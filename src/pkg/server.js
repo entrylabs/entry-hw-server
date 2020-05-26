@@ -183,12 +183,11 @@ class EntryServer extends EventEmitter {
         }
     }
 
-    _handleHttpRequest(req, res) {
+    async _handleHttpRequest(req, res) {
         /**
          * 모듈화 작업시, 오프라인이 엔트리 모듈서버의 대체가 되기 위해 필요한 request 처리구문
          */
         if (req.url.startsWith('/modules')) {
-            console.log('hello hello ', req.url)
             const { handleModuleListRequest, handleModuleFileRequest } = this.options;
 
             // 없는곳은 'modules', 'files' 명칭 고정으로 판단
@@ -197,8 +196,8 @@ class EntryServer extends EventEmitter {
             if (!name) {
                 // 전체 리스트를 요구해야함
                 if (handleModuleListRequest) {
-                    const moduleList = handleModuleListRequest();
-                    res.writeHead(200, {'Content-Type': 'application/json'})
+                    const moduleList = await handleModuleListRequest();
+                    res.writeHead(200, {'Content-Type': 'application/json'});
                     res.end(JSON.stringify(moduleList));
                 } else {
                     res.statusCode = 404;
@@ -209,6 +208,15 @@ class EntryServer extends EventEmitter {
                 if (handleModuleFileRequest) {
                     const filePath = handleModuleFileRequest(name, type);
                     if (filePath) {
+                        fs.readFile(filePath, (err, data) => {
+                            if (err) {
+                                res.statusCode = 404;
+                                res.end();
+                            } else {
+                                // res.writeHead(200, {'Content-Type': 'image/png'});
+                                res.end(data);
+                            }
+                        });
                         fs.createReadStream(filePath).pipe(res);
                     } else {
                         res.statusCode = 404;
