@@ -19,8 +19,8 @@ const registerFunction = (entryServer) => {
     entryServer.on('data', (message) => {
         sendEventUsingProcess('data', message);
     });
-    entryServer.on('close', () => {
-        sendEventUsingProcess('close');
+    entryServer.on('close', (connectionId) => {
+        sendEventUsingProcess('close', connectionId);
     });
     entryServer.on('connection', () => {
         sendEventUsingProcess('connection');

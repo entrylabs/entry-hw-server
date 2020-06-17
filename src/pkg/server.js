@@ -343,6 +343,7 @@ class EntryServer extends EventEmitter {
 
             // 자신에게 연결된 소켓이 연결이 해제된 경우
             connection.on('disconnect', () => {
+                this.emit('close', connection.roomId);
                 if (connection.handshake && connection.handshake.query.childServer === 'true') {
                     // 연결해제된 클라이언트 소켓이 하드웨어인 경우
                     printLog('hardware client socket disconnected:', connection.id);
