@@ -31,7 +31,7 @@ const registerFunction = (entryServer) => {
           break;
         }
         case "secret": {
-          const { value } = require("../../secret");
+          const { value } = require("../../assets/secret");
           process.send({
             key: "secret",
             value,
