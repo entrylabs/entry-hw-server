@@ -1,3 +1,4 @@
+const { value } = require("../../assets/secret");
 /**
  * 외부에서 메세지를 받아 서버에 전달하는 역할을 하는 함수
  * @param entryServer {EntryServer}
@@ -31,7 +32,6 @@ const registerFunction = (entryServer) => {
           break;
         }
         case "secret": {
-          const { value } = require("../../assets/secret");
           process.send({
             key: "secret",
             value,
