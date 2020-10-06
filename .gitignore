@@ -2,3 +2,7 @@
 node_modules
 server
 server.exe
+*.pem
+*.key
+*.crt
+server.txt
