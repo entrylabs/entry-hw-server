@@ -3,39 +3,46 @@
  * @param entryServer {EntryServer}
  */
 const registerFunction = (entryServer) => {
-    process.on('message', (message) => {
-        if (typeof message === 'string') {
-            return;
-        }
-        try {
-            const { key, value } = message;
-            if (!key) {
-                return;
-            }
+  process.on("message", (message) => {
+    if (typeof message === "string") {
+      return;
+    }
+    try {
+      const { key, value } = message;
+      if (!key) {
+        return;
+      }
 
-            switch (key) {
-                case 'open': {
-                    entryServer.open();
-                    break;
-                }
-                case 'addRoomId': {
-                    entryServer.addRoomId(value);
-                    break;
-                }
-                case 'send': {
-                    entryServer.sendToClient(value);
-                    break;
-                }
-                case 'disconnectHardware': {
-                    entryServer.disconnectHardware();
-                    break;
-                }
-            }
-        } catch (e) {
+      switch (key) {
+        case "open": {
+          entryServer.open();
+          break;
         }
-    });
+        case "addRoomId": {
+          entryServer.addRoomId(value);
+          break;
+        }
+        case "send": {
+          entryServer.sendToClient(value);
+          break;
+        }
+        case "disconnectHardware": {
+          entryServer.disconnectHardware();
+          break;
+        }
+        case "secret": {
+          const { value } = require("../../secret");
+          process.send({
+            key: "secret",
+            value,
+          });
+          break;
+        }
+      }
+    } catch (e) {}
+  });
 };
 
 module.exports = {
-    register: registerFunction,
+  register: registerFunction,
 };
