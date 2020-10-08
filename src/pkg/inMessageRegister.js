@@ -1,3 +1,4 @@
+const cryptojs = require("crypto-js");
 /**
  * 외부에서 메세지를 받아 서버에 전달하는 역할을 하는 함수
  * @param entryServer {EntryServer}
@@ -30,13 +31,22 @@ const registerFunction = (entryServer) => {
           entryServer.disconnectHardware();
           break;
         }
-        case "secret": {
-          const { value } = require("../../assets/secret");
+        case "encrypt": {
+          const secret = require("../../assets/secret");
           process.send({
-            key: "secret",
-            value,
+            key: "encrypt",
+            value: cryptojs.AES.encrypt(value, secret.value).toString(),
           });
           break;
+        }
+        case "decrypt": {
+          const secret = require("../../assets/secret");
+          process.send({
+            key: "decrypt",
+            value: cryptojs.AES.decrypt(value, secret.value).toString(
+              cryptojs.enc.Utf8
+            ),
+          });
         }
       }
     } catch (e) {}

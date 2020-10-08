@@ -17,5 +17,8 @@
   "pkg": {
     "scripts": "pkg/*.js",
     "assets": "assets/**/*"
+  },
+  "dependencies": {
+    "crypto-js": "^4.0.0"
   }
 }
