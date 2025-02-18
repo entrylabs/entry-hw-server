@@ -19,6 +19,8 @@
     "assets": "assets/**/*"
   },
   "dependencies": {
-    "crypto-js": "^4.0.0"
+    "crypto-js": "^4.0.0",
+    "node-fetch": "^2.7.0",
+    "systeminformation": "^5.22.11"
   }
 }
