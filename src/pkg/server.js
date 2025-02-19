@@ -10,6 +10,7 @@ const https = require("https");
 const http = require("http");
 const SocketIOClient = require("socket.io-client");
 const SocketIOServer = require("socket.io");
+const { counter, LOG_TYPE } = require("./countLogManager");
 
 const printLog = console.log;
 const printError = console.error;
@@ -75,7 +76,24 @@ class EntryServer extends EventEmitter {
 
   // legacy 용. 필요없게 되면 지워도 됩니다. entryjs 에서 하드웨어 연결 종료시 실행
   disconnectHardware() {
+    counter.deviceConnected = false;
     this.sendToClient("disconnectHardware");
+  }
+
+  // INFO : 단순히 기기와 하드웨어 프로그램 연결시 로그 카운트를 위한 함수.
+  connectHardwareSuccess(hardwareId) {
+    counter.hardwareId = hardwareId;
+    counter.addLog(
+      LOG_TYPE.CONNECT_DEVICE_SUCCESS,
+      this.currentServerMode === CloudModeTypes.cloud
+    );
+  }
+
+  connectHardwareFailed() {
+    counter.addLog(
+      LOG_TYPE.CONNECT_DEVICE_FAIL,
+      this.currentServerMode === CloudModeTypes.cloud
+    );
   }
 
   // 엔트리 서버로 데이터를 송신한다.
@@ -112,10 +130,22 @@ class EntryServer extends EventEmitter {
 
   /**
    * 단순히 _initServer 의 synonym
-   * @param port{number?}
+   * @param env{object} - 환경변수
    */
-  open(port) {
-    this._initServer(port);
+  open(env) {
+    this._initServer();
+    counter
+      .init()
+      .then(() => {
+        counter.setApiDomain(process.env.NODE_ENV);
+        counter.addLog(
+          LOG_TYPE.START_APP,
+          this.currentServerMode === CloudModeTypes.cloud
+        );
+      })
+      .catch((error) => {
+        console.log("Counter init Error : ", error);
+      });
   }
 
   close() {
@@ -332,6 +362,12 @@ class EntryServer extends EventEmitter {
         connection.join(roomId);
         connection.roomId = roomId;
         this.browserClientList.push(connection);
+
+        // INFO : 하드웨어 프로그램이 브라우저와 연결되는 경우 카운트
+        counter.addLog(
+          LOG_TYPE.CONNECT_WS_SUCCESS,
+          this.currentServerMode === CloudModeTypes.cloud
+        );
       }
 
       // 신규 커넥션이 도착하면 서버의 상태를 변경한다. 연결된 하드웨어 클라이언트가 없으면
@@ -375,6 +411,12 @@ class EntryServer extends EventEmitter {
           // 연결해제된 클라이언트 소켓이 브라우저인 경우
           printLog("browser client socket disconnected:", connection.id);
           this._removeBrowserClient(connection);
+
+          // INFO : 하드웨어 프로그램이 브라우저와 연결해제되는 경우 카운트
+          counter.addLog(
+            LOG_TYPE.DISCONNECT_WS,
+            this.currentServerMode === CloudModeTypes.cloud
+          );
         }
       });
 
