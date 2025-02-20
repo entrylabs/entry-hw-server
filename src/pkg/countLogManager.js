@@ -25,27 +25,7 @@ class CountLogManager {
     this.wsConnected = false;
     this.entryApiDomain = undefined;
     this.hardwareId = undefined;
-  }
-
-  async getSha1() {
-    const targetFilePath = path.join(process.execPath, "..", TARGET_FILE_NAME);
-    if (!fs.existsSync(targetFilePath)) {
-      console.log("targetFilePath not Found");
-      return;
-    }
-
-    const checksum = crypto.createHash("sha1");
-    const readStream = fs.createReadStream(targetFilePath);
-
-    return new Promise((resolve, reject) => {
-      readStream.on("data", function (data) {
-        checksum.update(data);
-      });
-      readStream.on("end", function () {
-        resolve(checksum.digest("hex"));
-      });
-      readStream.on("error", reject);
-    });
+    this.offlineVersion = undefined;
   }
 
   async getOsInfo() {
@@ -73,8 +53,12 @@ class CountLogManager {
     this.logs.push(log);
   }
 
-  setApiDomain(env) {
-    this.entryApiDomain = ENTRY_API_SERVER[env];
+  setApiDomain(getEntryDomain) {
+    this.entryApiDomain = getEntryDomain;
+  }
+
+  setOfflineVersion(offlineVersion) {
+    this.offlineVersion = offlineVersion;
   }
 
   setConnectionState(type) {
@@ -104,9 +88,17 @@ class CountLogManager {
     const logData = {
       instanceHashId: this.instanceHashId,
       asar: this.sha1,
-      osInfo: this.osInfo,
+      osInfo: {
+        platform: this.osInfo.platform,
+        distro: this.osInfo.distro,
+        release: this.osInfo.release,
+        codename: this.osInfo.codename,
+        kernel: this.osInfo.kernel,
+        arch: this.osInfo.arch,
+      },
       logs: this.logs,
       hardwareId: this.hardwareId,
+      offlineVer: this.offlineVersion,
     };
 
     if (!this.entryApiDomain) {
@@ -133,8 +125,9 @@ class CountLogManager {
     return hash;
   }
 
-  async init() {
-    this.sha1 = await this.getSha1();
+  async init(offlineVersion, getEntryDomain) {
+    this.setApiDomain(getEntryDomain);
+    this.setOfflineVersion(offlineVersion);
     this.osInfo = await this.getOsInfo();
   }
 }

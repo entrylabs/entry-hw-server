@@ -132,12 +132,11 @@ class EntryServer extends EventEmitter {
    * 단순히 _initServer 의 synonym
    * @param env{object} - 환경변수
    */
-  open(env) {
+  open(offlineVersion, getEntryDomain) {
     this._initServer();
     counter
-      .init()
+      .init(offlineVersion, getEntryDomain)
       .then(() => {
-        counter.setApiDomain(process.env.NODE_ENV);
         counter.addLog(
           LOG_TYPE.START_APP,
           this.currentServerMode === CloudModeTypes.cloud
