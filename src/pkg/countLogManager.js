@@ -106,7 +106,7 @@ class CountLogManager {
       return;
     }
 
-    fetch(`${this.entryApiDomain}/api/hwActionLog`, {
+    fetch(`${this.entryApiDomain}${process.env.HW_LOG_ENDPOINT}`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(logData),
