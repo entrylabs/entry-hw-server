@@ -1,4 +1,5 @@
 const cryptojs = require("crypto-js");
+const { counter } = require("./countLogManager");
 /**
  * 외부에서 메세지를 받아 서버에 전달하는 역할을 하는 함수
  * @param entryServer {EntryServer}
@@ -17,6 +18,7 @@ const registerFunction = (entryServer) => {
       switch (key) {
         case "open": {
           entryServer.open();
+          counter.setApiDomain(value);
           break;
         }
         case "addRoomId": {
@@ -25,6 +27,14 @@ const registerFunction = (entryServer) => {
         }
         case "send": {
           entryServer.sendToClient(value);
+          break;
+        }
+        case "connectHardwareSuccess": {
+          entryServer.connectHardwareSuccess(value);
+          break;
+        }
+        case "connectHardwareFailed": {
+          entryServer.connectHardwareFailed();
           break;
         }
         case "disconnectHardware": {
