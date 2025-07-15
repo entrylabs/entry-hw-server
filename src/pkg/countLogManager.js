@@ -88,14 +88,7 @@ class CountLogManager {
     const logData = {
       instanceHashId: this.instanceHashId,
       asar: this.sha1,
-      osInfo: {
-        platform: this.osInfo.platform,
-        distro: this.osInfo.distro,
-        release: this.osInfo.release,
-        codename: this.osInfo.codename,
-        kernel: this.osInfo.kernel,
-        arch: this.osInfo.arch,
-      },
+      osInfo: this.osInfo,
       logs: this.logs,
       hardwareId: this.hardwareId,
       offlineVer: this.offlineVersion,
