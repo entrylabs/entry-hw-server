@@ -99,13 +99,10 @@ class CountLogManager {
       return;
     }
 
-    console.log(
-      "Sending logs to:",
-      `${this.entryApiDomain}${process.env.HW_LOG_ENDPOINT}`
-    );
+    console.log("Sending logs to:", `${this.entryApiDomain}`);
     console.log("Log Data:", logData);
 
-    fetch(`${this.entryApiDomain}${process.env.HW_LOG_ENDPOINT}`, {
+    fetch(this.entryApiDomain, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(logData),
