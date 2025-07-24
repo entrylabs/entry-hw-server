@@ -99,8 +99,9 @@ class CountLogManager {
       return;
     }
 
-    console.log("Sending logs to:", `${this.entryApiDomain}`);
-    console.log("Log Data:", logData);
+    console.log(
+      `Sending logs to: ${this.entryApiDomain}, instanceHashId: ${logData.instanceHashId}`
+    );
 
     fetch(this.entryApiDomain, {
       method: "POST",
